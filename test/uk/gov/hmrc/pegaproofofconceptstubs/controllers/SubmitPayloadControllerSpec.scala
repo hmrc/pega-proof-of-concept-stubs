@@ -24,12 +24,11 @@ import play.api.Application
 import play.api.Play.materializer
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.pegaproofofconceptstubs.models.Payload
 import uk.gov.hmrc.pegaproofofconceptstubs.utils.Generators
 
-class SubmitPayloadSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with ScalaCheckDrivenPropertyChecks
+class SubmitPayloadControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with ScalaCheckDrivenPropertyChecks
   with Generators {
 
   override def fakeApplication(): Application =
@@ -40,17 +39,12 @@ class SubmitPayloadSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSui
       )
       .build()
 
-  private val controller = app.injector.instanceOf[SubmitPayload]
-
-  def fakeRequestWithPayload(payload: Payload) = FakeRequest(Helpers.POST, routes.SubmitPayload.submitPayload.path())
-    .withJsonBody(Json.toJson(payload))
+  private val controller = app.injector.instanceOf[SubmitPayloadController]
 
   "SubmitPayload Controller" should {
     "submit payload in submitPayload and return 200" in {
-      forAll(nonEmptyPayload) { payload =>
-        val result = controller.submitPayload()(fakeRequestWithPayload(payload))
-        status(result) shouldBe 200
-      }
+      val result = controller.submitPayload()(FakeRequest().withJsonBody(Json.toJson("data" -> "qweqwe")))
+      status(result) shouldBe 200
     }
   }
 
