@@ -22,7 +22,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.pegaproofofconceptstubs.utils.Generators
@@ -44,7 +43,8 @@ class SubmitPayloadControllerSpec extends AnyWordSpec with Matchers with GuiceOn
   "SubmitPayload Controller" should {
     "submit payload in submitPayload and return 200" in {
       forAll(nonEmptyPayload) { payload =>
-        val result = controller.submitPayload()(FakeRequest().withBody(Json.toJsObject(payload)))
+        val result = controller.submitPayload()(FakeRequest().withBody(payload))
+
         status(result) shouldBe 200
       }
     }

@@ -18,7 +18,7 @@ package uk.gov.hmrc.pegaproofofconceptstubs.models
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class Payload(data: String)
+final case class Payload(data: String) extends AnyVal
 
 object Payload {
 
