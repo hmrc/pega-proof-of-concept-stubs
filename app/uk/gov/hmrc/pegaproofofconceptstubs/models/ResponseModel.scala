@@ -16,11 +16,20 @@
 
 package uk.gov.hmrc.pegaproofofconceptstubs.models
 
-import play.api.libs.json.{JsObject, Json, OFormat}
+import play.api.libs.json.{Json, OFormat}
 
-final case class Payload(caseTypeID: String, processID: String, parentCaseID: String, content: JsObject)
+import scala.util.Random
 
-object Payload {
+final case class ResponseModel(ID: String, nextAssignmentID: String, nextPageID: String, pxObjClass: String)
+
+object ResponseModel {
+
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
-  implicit val formats: OFormat[Payload] = Json.format[Payload]
+  implicit val format: OFormat[ResponseModel] = Json.format
+
+  val sessionIdNum: Int = Random.between(10000, 99999)
+
+  val defaultResponse: ResponseModel =
+    ResponseModel(s"HMRC-DEBT-WORK A-${sessionIdNum.toString}", "ASSIGN-WORKLIST HMRC-DEBT-WORK A-13002!STARTAFFORDABILITYASSESSMENT_FLOW", "Perform", "Pega-API-CaseManagement-Case")
+
 }
