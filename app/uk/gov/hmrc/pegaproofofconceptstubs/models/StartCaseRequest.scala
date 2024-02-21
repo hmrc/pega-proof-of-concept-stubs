@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.pegaproofofconceptstubs.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsObject, Json, OFormat}
 
-final case class Payload(data: String) extends AnyVal
+final case class StartCaseRequest(caseTypeID: String, processID: String, parentCaseID: String, content: JsObject)
 
-object Payload {
-
-  implicit val formats: OFormat[Payload] = Json.format[Payload]
+object StartCaseRequest {
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
+  implicit val formats: OFormat[StartCaseRequest] = Json.format[StartCaseRequest]
 }
