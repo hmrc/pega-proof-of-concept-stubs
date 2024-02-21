@@ -19,18 +19,18 @@ package uk.gov.hmrc.pegaproofofconceptstubs.controllers
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, ControllerComponents}
-import uk.gov.hmrc.pegaproofofconceptstubs.models.{Payload, ResponseModel}
+import uk.gov.hmrc.pegaproofofconceptstubs.models.{StartCaseRequest, StartCaseResponse}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
 
 @Singleton()
-class SubmitPayloadController @Inject() (cc: ControllerComponents)()
+class PegaController @Inject() (cc: ControllerComponents)()
   extends BackendController(cc) with Logging {
 
-  val submitPayload: Action[Payload] = Action.async(parse.json[Payload]) { implicit request =>
+  val startCase: Action[StartCaseRequest] = Action(parse.json[StartCaseRequest]) { implicit request =>
     logger.info("[OPS-11581] payload submitted with value: " + request.body.toString)
-    Future.successful(Ok(Json.toJson(ResponseModel.defaultResponse)))
+    logger.info("[OPS-11785] responding with: " + StartCaseResponse.defaultResponse.toString)
+    Ok(Json.toJson(StartCaseResponse.defaultResponse))
   }
 }

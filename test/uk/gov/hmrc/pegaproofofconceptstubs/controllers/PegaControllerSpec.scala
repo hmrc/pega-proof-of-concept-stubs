@@ -26,7 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.pegaproofofconceptstubs.utils.Generators
 
-class SubmitPayloadControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with ScalaCheckDrivenPropertyChecks
+class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with ScalaCheckDrivenPropertyChecks
   with Generators {
 
   override def fakeApplication(): Application =
@@ -38,12 +38,12 @@ class SubmitPayloadControllerSpec extends AnyWordSpec with Matchers with GuiceOn
       .overrides()
       .build()
 
-  private val controller = app.injector.instanceOf[SubmitPayloadController]
+  private val controller = app.injector.instanceOf[PegaController]
 
-  "SubmitPayload Controller" should {
-    "submit payload in submitPayload and return 200" in {
-      forAll(nonEmptyPayload) { payload =>
-        val result = controller.submitPayload()(FakeRequest().withBody(payload))
+  "Pega Controller" should {
+    "submit StartCaseRequest in startCase and return 200" in {
+      forAll(nonEmptyStartCaseRequest) { payload =>
+        val result = controller.startCase()(FakeRequest().withBody(payload))
 
         status(result) shouldBe 200
       }

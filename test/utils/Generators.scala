@@ -18,14 +18,14 @@ package uk.gov.hmrc.pegaproofofconceptstubs.utils
 
 import org.scalacheck.Gen
 import play.api.libs.json.Json
-import uk.gov.hmrc.pegaproofofconceptstubs.models.Payload
+import uk.gov.hmrc.pegaproofofconceptstubs.models.StartCaseRequest
 
 trait Generators {
   val nonEmptyStringGen: Gen[String] = for {
     length <- Gen.chooseNum(1, 50)
     str <- Gen.listOfN(length, Gen.alphaChar).map(_.mkString)
   } yield str
-  val nonEmptyPayload: Gen[Payload] = for {
+  val nonEmptyStartCaseRequest: Gen[StartCaseRequest] = for {
     value <- nonEmptyStringGen
-  } yield Payload(value, "", "", Json.obj())
+  } yield StartCaseRequest(value, "", "", Json.obj())
 }
