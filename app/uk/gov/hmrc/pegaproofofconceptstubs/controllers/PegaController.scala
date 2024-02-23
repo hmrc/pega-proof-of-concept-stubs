@@ -18,10 +18,12 @@ package uk.gov.hmrc.pegaproofofconceptstubs.controllers
 
 import play.api.Logging
 import play.api.libs.json.Json
-import play.api.mvc.{Action, ControllerComponents}
-import uk.gov.hmrc.pegaproofofconceptstubs.models.{StartCaseRequest, StartCaseResponse}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.pegaproofofconceptstubs.models.{GetCaseResponse, StartCaseRequest, StartCaseResponse}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import java.util.Locale
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
@@ -31,6 +33,19 @@ class PegaController @Inject() (cc: ControllerComponents)()
   val startCase: Action[StartCaseRequest] = Action(parse.json[StartCaseRequest]) { implicit request =>
     logger.info("[OPS-11581] payload submitted with value: " + request.body.toString)
     logger.info("[OPS-11785] responding with: " + StartCaseResponse.defaultResponse.toString)
-    Ok(Json.toJson(StartCaseResponse.defaultResponse))
+    if (request.headers.get(HeaderNames.AUTHORIZATION).getOrElse("").toLowerCase(Locale.ENGLISH).startsWith("basic")) {
+      Ok(Json.toJson(StartCaseResponse.defaultResponse))
+    } else {
+      Forbidden
+    }
+  }
+
+  def getCase(caseId: String): Action[AnyContent] = Action { implicit request =>
+    logger.info("caseId was " + caseId)
+    if (request.headers.get(HeaderNames.AUTHORIZATION).getOrElse("").toLowerCase(Locale.ENGLISH).startsWith("basic")) {
+      Ok(GetCaseResponse(caseId).value)
+    } else {
+      Forbidden
+    }
   }
 }
