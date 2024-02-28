@@ -47,11 +47,11 @@ class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
 
     "submitting a StartCaseRequest in startCase" should {
 
-      "return 200 for a valid request" in {
+      "return 201 for a valid request" in {
 
         val json = StartCaseRequest("", "", "", Json.obj())
         val result = controller.startCase()(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "basic").withBody(json))
-        status(result) shouldBe 200
+        status(result) shouldBe 201
       }
 
       "return 403 when provided an incorrect auth header" in {
