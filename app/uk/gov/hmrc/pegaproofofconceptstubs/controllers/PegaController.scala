@@ -32,17 +32,16 @@ class PegaController @Inject() (cc: ControllerComponents)()
   extends BackendController(cc) with Logging {
 
   val startCase: Action[StartCaseRequest] = Action(parse.json[StartCaseRequest]) { implicit request =>
-    logger.info("[OPS-11581] payload submitted with value: " + request.body.toString)
-    logger.info("[OPS-11785] responding with: " + StartCaseResponse.defaultResponse.toString)
-    logger.info("Received access token: " + request.headers.get(HeaderNames.AUTHORIZATION).toString)
+    logger.info("Received access token: " + request.headers.get(HeaderNames.AUTHORIZATION).toString
+      + "\n -> Responded with: " + StartCaseResponse.defaultResponse.toString
+      + "\n and payload submitted with value: " + request.body.toString)
 
     if (hasCorrectAuth(request)) Created(Json.toJson(StartCaseResponse.defaultResponse))
     else Forbidden
   }
 
   def getCase(caseId: String): Action[AnyContent] = Action { implicit request =>
-    logger.info("caseId was " + caseId)
-    logger.info("Received access token: " + request.headers.get(HeaderNames.AUTHORIZATION).toString)
+    logger.info("Received access token: " + request.headers.get(HeaderNames.AUTHORIZATION).toString + " and caseId was " + caseId)
 
     if (hasCorrectAuth(request)) Ok(GetCaseResponse(caseId).value)
     else Forbidden
