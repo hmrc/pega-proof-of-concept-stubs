@@ -45,12 +45,27 @@ class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
 
   "Pega Controller" when {
 
+    "getting an access token in getToken" should {
+
+      "return 200 for a valid request" in {
+
+        val result = controller.getToken(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "basic"))
+        status(result) shouldBe 200
+      }
+
+      "return an error code for an invalid request" in {
+
+        val result = controller.getToken(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "beans"))
+        status(result) shouldBe UNAUTHORIZED
+      }
+    }
+
     "submitting a StartCaseRequest in startCase" should {
 
       "return 201 for a valid request" in {
 
         val json = StartCaseRequest("", "", "", Json.obj())
-        val result = controller.startCase()(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "basic").withBody(json))
+        val result = controller.startCase()(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "bearer").withBody(json))
         status(result) shouldBe 201
       }
 
@@ -75,7 +90,7 @@ class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
 
       "return a 200 for a valid request" in {
 
-        val result = controller.getCase("blah")(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "basic"))
+        val result = controller.getCase("blah")(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "bearer"))
 
         status(result) shouldBe 200
         contentAsJson(result) shouldBe Json.parse(
