@@ -47,13 +47,18 @@ class PegaController @Inject() (cc: ControllerComponents)()
     else Forbidden
   }
 
-  def getToken: Action[AnyContent] = Action {
+  val getToken: Action[AnyContent] = Action { request =>
     val randomToken: Int = Random.between(10000, 99999)
     logger.info(s"Responding with access token: ${randomToken.toString}")
-    Ok(PegaToken(s"${randomToken.toString}").value)
+
+    if (hasCorrectTokenAuth(request)) Ok(PegaToken(s"${randomToken.toString}").value)
+    else Unauthorized
   }
 
   private def hasCorrectAuth(request: Request[_]): Boolean =
     request.headers.get(HeaderNames.AUTHORIZATION).getOrElse("").toLowerCase(Locale.ENGLISH).startsWith("bearer")
+
+  private def hasCorrectTokenAuth(request: Request[_]): Boolean =
+    request.headers.get(HeaderNames.AUTHORIZATION).getOrElse("").toLowerCase(Locale.ENGLISH).startsWith("basic")
 
 }
