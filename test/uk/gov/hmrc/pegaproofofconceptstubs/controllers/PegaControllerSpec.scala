@@ -26,7 +26,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.mvc.Http.HeaderNames
-import uk.gov.hmrc.pegaproofofconceptstubs.models.StartCaseRequest
+import uk.gov.hmrc.pegaproofofconceptstubs.models.{StartCaseRequest, StartCaseResponse}
 import uk.gov.hmrc.pegaproofofconceptstubs.utils.Generators
 
 class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with ScalaCheckDrivenPropertyChecks
@@ -67,6 +67,14 @@ class PegaControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSu
         val json = StartCaseRequest("", "", "", Json.obj())
         val result = controller.startCase()(FakeRequest().withHeaders(HeaderNames.AUTHORIZATION -> "bearer").withBody(json))
         status(result) shouldBe 201
+
+        val response = contentAsJson(result).as[StartCaseResponse]
+        response.data shouldBe StartCaseResponse.Data(
+          StartCaseResponse.CaseInfo(
+            List(StartCaseResponse.Assignment("ASSIGN-WORKLIST HMRC-DEBT-WORK A-13002!STARTAFFORDABILITYASSESSMENT_FLOW"))
+          )
+        )
+        response.ID should fullyMatch regex "HMRC-DEBT-WORK A-(\\d){5}"
       }
 
       "return 403 when provided an incorrect auth header" in {
